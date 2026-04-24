@@ -1,0 +1,39 @@
+name: Docker Compose CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build and start containers
+        run: docker compose up -d --build
+
+      - name: Wait for app to be ready
+        run: |
+          for i in {1..10}; do
+            if curl -s http://localhost:5185 > /dev/null; then
+              echo "App is up!"
+              exit 0
+            fi
+            echo "Waiting..."
+            sleep 3
+          done
+          echo "App failed to start"
+          docker compose logs
+          exit 1
+
+      - name: Show logs (optional)
+        if: always()
+        run: docker compose logs
+
+      - name: Shutdown
+        if: always()
+        run: docker compose down
