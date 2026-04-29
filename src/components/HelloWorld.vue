@@ -38,6 +38,9 @@ const count = ref(0)
     >
       Count is {{ count }}
     </button>
+    <router-link to="/users">
+      Users page
+    </router-link>
   </section>
 
   <div class="ticks" />

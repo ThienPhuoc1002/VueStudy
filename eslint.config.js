@@ -13,5 +13,8 @@ export default [
         parser: tseslint.parser
       }
     }
+  },
+  {
+    ignores: ['dist', 'node_modules']
   }
 ]
